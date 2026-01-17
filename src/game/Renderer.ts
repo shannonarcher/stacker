@@ -112,6 +112,8 @@ export class Renderer {
     this.renderPrizeLines();
     this.renderStackedBlocks(game);
     this.renderFallingBlocks(game);
+    this.renderCelebrationBlocks(game);
+    this.renderParticles(game);
 
     if (game.state === 'playing' && game.activeBlock) {
       this.renderActiveBlock(game);
@@ -206,6 +208,50 @@ export class Renderer {
       const alpha = Math.max(0, 1 - (fb.y - fb.row) / 3);
       this.ctx.fillStyle = `rgba(255, 51, 51, ${alpha})`;
       this.ctx.fillRect(x + gap, y + gap, this.cellSize - gap * 2, this.cellSize - gap * 2);
+    }
+  }
+
+  private renderCelebrationBlocks(game: Game): void {
+    const gap = 2;
+    const blockSize = this.cellSize - gap * 2;
+
+    for (const cb of game.celebrationBlocks) {
+      const x = this.gridOffsetX + cb.x * this.cellSize + this.cellSize / 2;
+      const y = this.gridOffsetY + (GRID_HEIGHT - 1 - cb.y) * this.cellSize + this.cellSize / 2;
+
+      this.ctx.save();
+      this.ctx.translate(x, y);
+      this.ctx.rotate(cb.rotation);
+
+      // Rainbow color based on original position
+      const hue = (cb.col * 40 + cb.row * 20) % 360;
+      this.ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+      this.ctx.fillRect(-blockSize / 2, -blockSize / 2, blockSize, blockSize);
+
+      this.ctx.restore();
+    }
+  }
+
+  private renderParticles(game: Game): void {
+    for (const p of game.particles) {
+      const x = this.gridOffsetX + p.x * this.cellSize;
+      const y = this.gridOffsetY + (GRID_HEIGHT - 1 - p.y) * this.cellSize;
+      const alpha = p.life / p.maxLife;
+      const size = p.size * this.cellSize * alpha;
+
+      this.ctx.beginPath();
+      this.ctx.arc(x, y, size, 0, Math.PI * 2);
+      this.ctx.fillStyle = p.color.replace(')', `, ${alpha})`).replace('rgb', 'rgba').replace('#', '');
+
+      // Handle hex colors
+      if (p.color.startsWith('#')) {
+        const r = parseInt(p.color.slice(1, 3), 16);
+        const g = parseInt(p.color.slice(3, 5), 16);
+        const b = parseInt(p.color.slice(5, 7), 16);
+        this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      this.ctx.fill();
     }
   }
 

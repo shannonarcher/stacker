@@ -48,6 +48,7 @@ class StackerApp {
             } else if (result.majorPrize) {
               this.audio.play('major');
               this.input.triggerHaptic([100, 50, 100, 50, 200]);
+              this.game.triggerCelebration();
             } else if (result.minorPrize) {
               this.audio.play('minor');
               this.input.triggerHaptic([50, 30, 50, 30, 100]);
