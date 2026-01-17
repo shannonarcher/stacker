@@ -1,0 +1,236 @@
+{
+  "name": "Stacker",
+  "version": "1.0.0",
+  "description": "A faithful recreation of the classic arcade Stacker game where players time their button presses to stack moving blocks and reach the top to win prizes.",
+
+  "overview": {
+    "genre": "Arcade / Puzzle",
+    "platform": "Web Browser",
+    "target_audience": "Casual gamers of all ages",
+    "inspiration": "Classic arcade Stacker machines by LAI Games"
+  },
+
+  "gameplay": {
+    "objective": "Stack blocks as high as possible by stopping them at the right moment. Reach the minor prize line or major prize line to win.",
+
+    "core_mechanics": {
+      "block_movement": {
+        "description": "A row of blocks moves horizontally across the play field, bouncing off the left and right walls",
+        "direction": "Alternates each row (left-to-right, then right-to-left)",
+        "speed": "Increases as the player progresses higher"
+      },
+
+      "stacking": {
+        "description": "Player presses a button to stop the moving blocks and stack them on top of the previous row",
+        "alignment": "Blocks must align with the row below to remain",
+        "overhang": "Any blocks not aligned with the row below are removed/fall off"
+      },
+
+      "block_reduction": {
+        "description": "Missing alignment causes the stack to narrow",
+        "consequence": "Fewer blocks to work with on subsequent rows",
+        "game_over": "If all blocks miss alignment, the game ends"
+      }
+    },
+
+    "progression": {
+      "starting_blocks": 3,
+      "grid_width": 7,
+      "grid_height": 15,
+      "minor_prize_row": 10,
+      "major_prize_row": 15,
+      "speed_increases": [
+        { "row": 1, "speed": 1.0 },
+        { "row": 4, "speed": 1.3 },
+        { "row": 7, "speed": 1.6 },
+        { "row": 10, "speed": 2.0 },
+        { "row": 13, "speed": 2.5 }
+      ]
+    },
+
+    "win_conditions": {
+      "minor_prize": "Reach row 10 with at least 1 block remaining",
+      "major_prize": "Reach row 15 (top) with at least 1 block remaining"
+    },
+
+    "lose_condition": "All blocks fall off (no blocks remain to stack)"
+  },
+
+  "visual_design": {
+    "grid": {
+      "style": "LED-style grid display",
+      "cell_appearance": "Square cells with slight gaps between them",
+      "background": "Dark/black background to simulate arcade cabinet"
+    },
+
+    "blocks": {
+      "active_color": "Bright red or customizable neon colors",
+      "stacked_color": "Slightly dimmer version of active color",
+      "glow_effect": "Subtle glow around active blocks"
+    },
+
+    "prize_indicators": {
+      "minor_line": "Distinct horizontal line or color change at row 10",
+      "major_line": "Prominent indicator at top row (row 15)",
+      "labels": "MINOR and MAJOR text indicators on sides"
+    },
+
+    "animations": {
+      "block_movement": "Smooth horizontal sliding",
+      "stacking": "Brief flash when blocks lock in place",
+      "falling_blocks": "Blocks that miss fall downward and fade out",
+      "win_celebration": "Flashing lights and visual fanfare",
+      "game_over": "Stack collapses or fades out"
+    }
+  },
+
+  "audio": {
+    "sound_effects": {
+      "block_moving": "Optional subtle tick sound",
+      "stack_success": "Satisfying click/lock sound",
+      "perfect_stack": "Special chime for perfect alignment",
+      "block_fall": "Falling/dropping sound for missed blocks",
+      "speed_increase": "Tension-building sound cue",
+      "minor_prize": "Celebratory jingle",
+      "major_prize": "Big win fanfare",
+      "game_over": "Disappointment sound"
+    },
+    "background_music": "Optional arcade-style background track"
+  },
+
+  "controls": {
+    "primary_action": {
+      "keyboard": "Spacebar or Enter key",
+      "mouse": "Click anywhere on game area",
+      "touch": "Tap anywhere on screen"
+    },
+    "start_game": "Same as primary action when on title screen",
+    "restart": "Same as primary action after game over"
+  },
+
+  "user_interface": {
+    "screens": {
+      "title_screen": {
+        "elements": ["Game title", "High score display", "Press to start prompt"]
+      },
+      "game_screen": {
+        "elements": ["Play grid", "Current score/row", "Prize line indicators"]
+      },
+      "game_over_screen": {
+        "elements": ["Final score", "Prize won (if any)", "Play again prompt"]
+      }
+    },
+
+    "hud": {
+      "current_row": "Display showing current row number",
+      "blocks_remaining": "Optional indicator of current block count"
+    }
+  },
+
+  "scoring": {
+    "points_per_row": 100,
+    "perfect_bonus": 50,
+    "minor_prize_bonus": 500,
+    "major_prize_bonus": 2000,
+    "high_score": "Locally stored high score"
+  },
+
+  "technical_requirements": {
+    "build_tool": "Vite",
+    "language": "TypeScript",
+    "rendering": "HTML5 Canvas 2D",
+    "target_fps": 60,
+    "browser_support": ["Chrome", "Firefox", "Safari", "Edge"],
+    "local_storage": "For high score persistence",
+
+    "project_structure": {
+      "src/main.ts": "Entry point, canvas setup, game loop",
+      "src/game/Game.ts": "Core game state and logic",
+      "src/game/Block.ts": "Block entity and movement",
+      "src/game/Grid.ts": "Grid management and collision",
+      "src/game/Renderer.ts": "Canvas rendering optimized for mobile",
+      "src/game/Input.ts": "Unified input handling (touch/mouse/keyboard)",
+      "src/game/Audio.ts": "Sound manager with Web Audio API",
+      "src/utils/constants.ts": "Game constants and configuration",
+      "src/utils/storage.ts": "LocalStorage wrapper for high scores"
+    }
+  },
+
+  "mobile_optimization": {
+    "priority": "Mobile-first design",
+
+    "viewport": {
+      "meta_tag": "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover",
+      "orientation": "Portrait preferred, landscape supported",
+      "safe_areas": "Respect iOS safe areas (notch, home indicator)"
+    },
+
+    "canvas": {
+      "device_pixel_ratio": "Scale canvas for retina/high-DPI displays",
+      "sizing": "Fill viewport height, maintain aspect ratio",
+      "offscreen_canvas": "Use OffscreenCanvas for rendering when supported",
+      "image_smoothing": "Disabled for crisp pixel-art style blocks"
+    },
+
+    "touch_input": {
+      "event_type": "Use touchstart for zero-latency response",
+      "touch_area": "Full screen tap zone for easy one-handed play",
+      "prevent_defaults": "Prevent zoom, scroll, and context menu",
+      "haptic_feedback": "navigator.vibrate() on supported devices for stack/miss feedback"
+    },
+
+    "performance": {
+      "request_animation_frame": "Single rAF loop with delta time",
+      "object_pooling": "Reuse block objects to avoid GC pauses",
+      "minimal_dom": "Single canvas element, no DOM updates during gameplay",
+      "batch_rendering": "Minimize canvas state changes, batch draw calls",
+      "dirty_rectangles": "Only redraw changed regions when possible",
+      "avoid_shadows_blur": "No expensive canvas shadows or blur effects"
+    },
+
+    "pwa": {
+      "manifest": "Web app manifest for Add to Home Screen",
+      "icons": "App icons for home screen (192x192, 512x512)",
+      "theme_color": "Match game background color",
+      "display": "standalone",
+      "orientation": "portrait"
+    },
+
+    "audio_mobile": {
+      "web_audio_api": "Use Web Audio API for low-latency sound",
+      "unlock_on_touch": "Unlock AudioContext on first user interaction",
+      "preload": "Preload all sounds as AudioBuffers",
+      "short_sounds": "Keep sound effects under 100ms for responsiveness"
+    },
+
+    "battery_optimization": {
+      "pause_when_hidden": "Stop game loop on visibilitychange",
+      "reduce_motion": "Respect prefers-reduced-motion media query",
+      "efficient_animations": "Use CSS transforms for UI, canvas for game only"
+    },
+
+    "network": {
+      "bundle_size": "Target < 100KB gzipped total",
+      "code_splitting": "None needed for small game",
+      "asset_loading": "Inline critical assets, lazy load audio"
+    }
+  },
+
+  "vite_config": {
+    "build_target": "ES2020",
+    "minify": "terser with aggressive settings",
+    "sourcemap": false,
+    "asset_inlining": "Inline assets under 10KB",
+    "compression": "Generate .gz and .br files for production"
+  },
+
+  "future_enhancements": [
+    "Multiple color themes/skins",
+    "Difficulty modes (Easy/Normal/Hard)",
+    "Online leaderboards",
+    "Sound toggle options",
+    "Custom grid sizes",
+    "Power-ups (slow time, extra blocks)",
+    "Multiplayer mode"
+  ]
+}

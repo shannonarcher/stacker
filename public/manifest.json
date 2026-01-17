@@ -1,0 +1,18 @@
+{
+  "name": "Stacker",
+  "short_name": "Stacker",
+  "description": "Classic arcade Stacker game - stack blocks to win!",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
