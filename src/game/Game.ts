@@ -45,11 +45,22 @@ export class Game {
     this.spawnBlock(STARTING_BLOCKS);
   }
 
+  private getMaxBlockWidth(row: number): number {
+    // Force narrower blocks at top rows like the real arcade
+    if (row >= 14) return 1; // Top row: 1 block
+    if (row >= 12) return 2; // Rows 13-14: max 2 blocks
+    return STARTING_BLOCKS;  // Lower rows: normal
+  }
+
   private spawnBlock(width: number): void {
+    // Cap width based on row
+    const maxWidth = this.getMaxBlockWidth(this.currentRow);
+    const actualWidth = Math.min(width, maxWidth);
+
     // Alternate direction based on row
     const direction: 1 | -1 = this.currentRow % 2 === 0 ? 1 : -1;
-    const startX = direction === 1 ? 0 : GRID_WIDTH - width;
-    this.activeBlock = new Block(this.currentRow, width, startX, direction);
+    const startX = direction === 1 ? 0 : GRID_WIDTH - actualWidth;
+    this.activeBlock = new Block(this.currentRow, actualWidth, startX, direction);
   }
 
   update(deltaTime: number): void {
