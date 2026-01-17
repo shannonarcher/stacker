@@ -169,16 +169,14 @@ export class Renderer {
   private renderStackedBlocks(game: Game): void {
     const gap = 2;
     const cells = game.grid.getAllFilledCells();
-    const celebrationColors = ['#ff3333', '#ffcc00', '#00ff00', '#00ccff', '#ff00ff', '#ffffff'];
 
     for (const { row, col } of cells) {
       const x = this.gridOffsetX + col * this.cellSize;
       const y = this.gridOffsetY + (GRID_HEIGHT - 1 - row) * this.cellSize;
 
       if (game.celebrating) {
-        // Random flashing colors like the arcade
-        const colorIndex = Math.floor(Math.random() * celebrationColors.length);
-        this.ctx.fillStyle = celebrationColors[colorIndex];
+        // Monotone flashing - randomly toggle between bright and dim
+        this.ctx.fillStyle = Math.random() > 0.5 ? COLORS.activeBlock : COLORS.stackedBlock;
       } else {
         this.ctx.fillStyle = COLORS.stackedBlock;
       }
