@@ -108,7 +108,7 @@ export class Renderer {
   }
 
   private renderGame(game: Game): void {
-    this.renderGrid();
+    this.renderGrid(game);
     this.renderPrizeLines();
     this.renderStackedBlocks(game);
     this.renderFallingBlocks(game);
@@ -120,7 +120,7 @@ export class Renderer {
     this.renderScore(game);
   }
 
-  private renderGrid(): void {
+  private renderGrid(game: Game): void {
     const gap = 2;
 
     for (let row = 0; row < GRID_HEIGHT; row++) {
@@ -128,7 +128,13 @@ export class Renderer {
         const x = this.gridOffsetX + col * this.cellSize;
         const y = this.gridOffsetY + (GRID_HEIGHT - 1 - row) * this.cellSize;
 
-        this.ctx.fillStyle = COLORS.gridCell;
+        if (game.celebrating) {
+          // Sparkle effect - only ~10% of cells light up at a time
+          const sparkle = Math.random() < 0.1;
+          this.ctx.fillStyle = sparkle ? COLORS.stackedBlock : COLORS.gridCell;
+        } else {
+          this.ctx.fillStyle = COLORS.gridCell;
+        }
         this.ctx.fillRect(x + gap, y + gap, this.cellSize - gap * 2, this.cellSize - gap * 2);
       }
     }
@@ -174,12 +180,7 @@ export class Renderer {
       const x = this.gridOffsetX + col * this.cellSize;
       const y = this.gridOffsetY + (GRID_HEIGHT - 1 - row) * this.cellSize;
 
-      if (game.celebrating) {
-        // Monotone flashing - randomly toggle between bright and dim
-        this.ctx.fillStyle = Math.random() > 0.5 ? COLORS.activeBlock : COLORS.stackedBlock;
-      } else {
-        this.ctx.fillStyle = COLORS.stackedBlock;
-      }
+      this.ctx.fillStyle = COLORS.stackedBlock;
       this.ctx.fillRect(x + gap, y + gap, this.cellSize - gap * 2, this.cellSize - gap * 2);
     }
   }
