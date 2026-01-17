@@ -6,13 +6,16 @@ export const MAJOR_PRIZE_ROW = 15;
 
 export const SPEED_CONFIG = [
   { row: 1, speed: 1.0 },
-  { row: 4, speed: 1.3 },
-  { row: 7, speed: 1.6 },
-  { row: 10, speed: 2.0 },
-  { row: 13, speed: 2.5 },
+  { row: 3, speed: 1.4 },
+  { row: 5, speed: 1.8 },
+  { row: 7, speed: 2.3 },
+  { row: 9, speed: 2.9 },
+  { row: 11, speed: 3.6 },
+  { row: 13, speed: 4.5 },
+  { row: 14, speed: 5.5 },
 ];
 
-export const BASE_SPEED = 5; // cells per second
+export const BASE_SPEED = 7; // cells per second
 
 export const COLORS = {
   background: '#0a0a0a',
