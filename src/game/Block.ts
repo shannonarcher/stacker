@@ -33,12 +33,14 @@ export class Block {
       this.x += this.direction;
       this.accumulator -= 1;
 
-      // Bounce off walls
+      // Bounce off walls - reflect the movement
       if (this.x + this.width > GRID_WIDTH) {
-        this.x = GRID_WIDTH - this.width;
+        const overshoot = this.x + this.width - GRID_WIDTH;
+        this.x = GRID_WIDTH - this.width - overshoot;
         this.direction = -1;
       } else if (this.x < 0) {
-        this.x = 0;
+        const overshoot = -this.x;
+        this.x = overshoot;
         this.direction = 1;
       }
     }
