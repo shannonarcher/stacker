@@ -27,12 +27,11 @@ export class Input {
 
   private setupMouseEvents(element: HTMLElement): void {
     element.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      this.trigger();
+      if (e.button === 0) {
+        e.preventDefault();
+        this.trigger();
+      }
     });
-
-    // Prevent context menu
-    element.addEventListener('contextmenu', (e) => e.preventDefault());
   }
 
   private setupKeyboardEvents(): void {
