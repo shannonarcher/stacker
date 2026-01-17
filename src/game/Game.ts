@@ -20,17 +20,6 @@ export interface StackResult {
   majorPrize: boolean;
 }
 
-export interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  life: number;
-  maxLife: number;
-  color: string;
-  size: number;
-}
-
 export class Game {
   grid: Grid;
   activeBlock: Block | null = null;
@@ -40,8 +29,7 @@ export class Game {
   state: GameState = 'title';
   lastStackResult: StackResult | null = null;
   fallingBlocks: { col: number; row: number; y: number; velocity: number }[] = [];
-  particles: Particle[] = [];
-  celebrationBlocks: { col: number; row: number; x: number; y: number; vx: number; vy: number; rotation: number; rotationSpeed: number }[] = [];
+  celebrating: boolean = false;
 
   constructor() {
     this.grid = new Grid();
@@ -55,8 +43,7 @@ export class Game {
     this.state = 'playing';
     this.lastStackResult = null;
     this.fallingBlocks = [];
-    this.particles = [];
-    this.celebrationBlocks = [];
+    this.celebrating = false;
     this.spawnBlock(STARTING_BLOCKS);
   }
 
@@ -79,30 +66,6 @@ export class Game {
   }
 
   update(deltaTime: number): void {
-    // Update particles (always, for celebration)
-    for (let i = this.particles.length - 1; i >= 0; i--) {
-      const p = this.particles[i];
-      p.x += p.vx * deltaTime;
-      p.y += p.vy * deltaTime;
-      p.vy += 15 * deltaTime; // gravity
-      p.life -= deltaTime;
-      if (p.life <= 0) {
-        this.particles.splice(i, 1);
-      }
-    }
-
-    // Update celebration blocks
-    for (let i = this.celebrationBlocks.length - 1; i >= 0; i--) {
-      const cb = this.celebrationBlocks[i];
-      cb.x += cb.vx * deltaTime;
-      cb.y += cb.vy * deltaTime;
-      cb.vy += 12 * deltaTime; // gravity
-      cb.rotation += cb.rotationSpeed * deltaTime;
-      if (cb.y > GRID_HEIGHT + 5) {
-        this.celebrationBlocks.splice(i, 1);
-      }
-    }
-
     if (this.state !== 'playing' || !this.activeBlock) return;
 
     this.activeBlock.update(deltaTime);
@@ -119,44 +82,7 @@ export class Game {
   }
 
   triggerCelebration(): void {
-    const colors = ['#ff3333', '#ffcc00', '#00ff00', '#00ccff', '#ff00ff', '#ffffff'];
-    const cells = this.grid.getAllFilledCells();
-
-    // Explode each stacked block
-    for (const { row, col } of cells) {
-      // Add the block as a flying celebration block
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 8 + Math.random() * 12;
-      this.celebrationBlocks.push({
-        col,
-        row,
-        x: col,
-        y: row,
-        vx: Math.cos(angle) * speed,
-        vy: -Math.abs(Math.sin(angle) * speed) - 5,
-        rotation: 0,
-        rotationSpeed: (Math.random() - 0.5) * 15,
-      });
-
-      // Spawn particles from each block
-      for (let i = 0; i < 6; i++) {
-        const pAngle = Math.random() * Math.PI * 2;
-        const pSpeed = 3 + Math.random() * 8;
-        this.particles.push({
-          x: col + 0.5,
-          y: row + 0.5,
-          vx: Math.cos(pAngle) * pSpeed,
-          vy: Math.sin(pAngle) * pSpeed - 5,
-          life: 1.5 + Math.random(),
-          maxLife: 2.5,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          size: 0.2 + Math.random() * 0.3,
-        });
-      }
-    }
-
-    // Clear the grid since blocks are now flying
-    this.grid.reset();
+    this.celebrating = true;
   }
 
   stack(): StackResult | null {
